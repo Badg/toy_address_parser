@@ -21,7 +21,11 @@ A simple multinational address parser. Simple as in "quick and dirty", not as in
 git clone <repo>
 poetry install
 # ----- Usage ------
-poetry run python -m toy_address_parser
+# Serves a parser on localhost on <port>; defaults to 8000.
+# parse something with http://localhost/parse/<address>
+poetry run python -m toy_address_parser serve [port]
+# Parses via command line
+poetry run python -m toy_address_parser parse "Beispielstraße 123"
 # ----- Running tests ------
 poetry run python -m pytest --import-mode=importlib
 ```
@@ -34,12 +38,25 @@ git clone <repo>
 # In your favorite venv
 pip install .
 # ----- Usage ------
-python -m toy_address_parser
+# Serves a parser on localhost on <port>; defaults to 8000.
+# parse something with http://localhost/parse/<address>
+python -m toy_address_parser serve [port]
+# Parses via command line
+python -m toy_address_parser parse "Beispielstraße 123"
 # ----- Running tests ------
 python -m pytest --import-mode=importlib
 ```
 
 **Note: this requires a relatively new ``pip`` version** (I believe ``19.0.0`` or above, but don't quote me on that; I tested with 19.2.3).
+
+### Usage as a normal python module
+
+First, install however you'd like, for example, ``pip install git+git:///github.com/Badg/toy_address_parser.git``. Now, from inside python:
+
+```python
+from toy_address_parser import parse
+parse('Beispielstraße 123')
+```
 
 ## Style guide notes
 
@@ -68,3 +85,5 @@ Formatted per pep8 but not pep257. Specifics are in ``.flake8``, but the potenti
 +   I'm a little inconsistent about how I break brackets and parenthesis when their contents expand beyond a single line. It's partly something I need to work on, and partly something that I don't think fits well aesthetically into python in general
 
 ## Discussion
+
++   This was my first time using Typer, which went super well actually. I think its API is a serious step forward compared to other CLI-making frameworks, though I still have some complaints

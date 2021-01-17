@@ -1,0 +1,32 @@
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+name = "toy_address_parser"
+version = "0.0.0"
+description = "A quick and dirty (toy) street address parser"
+authors = ["Nick Badger <nbadger1@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+Hypercorn = "^0.11.2"
+lark-parser = "^0.11.1"
+quart = "^0.14.1"
+quart-trio = "^0.7.0"
+trio = "^0.18.0"
+
+[tool.poetry.dev-dependencies]
+ipython = "^7.19.0"
+pytest = "^6.1.2"
+flake8 = "^3.8.4"
+pyperclip = "^1.8.1"
+pytest-trio = "^0.7.0"
+httpx = "^0.16.1"
+
+[tool.pytest.ini_options]
+addopts = "-rA -q"
+testpaths = [
+    "tests"
+]
+trio_mode = true

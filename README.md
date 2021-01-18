@@ -25,7 +25,7 @@ poetry install
 # parse something with http://localhost/parse/<address>
 poetry run python -m toy_address_parser serve [port]
 # Parses via command line
-poetry run python -m toy_address_parser parse "Beispielstraße 123"
+poetry run python -m toy_address_parser parse "Musterstraße 123"
 # ----- Running tests ------
 poetry run python -m pytest --import-mode=importlib
 ```
@@ -42,7 +42,7 @@ pip install .
 # parse something with http://localhost/parse/<address>
 python -m toy_address_parser serve [port]
 # Parses via command line
-python -m toy_address_parser parse "Beispielstraße 123"
+python -m toy_address_parser parse "Musterstraße 123"
 # ----- Running tests ------
 python -m pytest --import-mode=importlib
 ```
@@ -55,7 +55,7 @@ First, install however you'd like, for example, ``pip install git+git:///github.
 
 ```python
 from toy_address_parser import parse
-parse('Beispielstraße 123')
+parse('Musterstraße 123')
 ```
 
 ## Style guide notes

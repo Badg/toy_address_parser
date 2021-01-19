@@ -44,7 +44,7 @@ jobs:
       fail-fast: false
       matrix:
         python-version: [3.8, 3.9]
-        os: [ubuntu, macos, windows]
+        os: [ubuntu]
 
     runs-on: ${{ matrix.os }}-latest
 
@@ -70,4 +70,4 @@ jobs:
         run: python -m poetry install
     
       - name: Run tests
-        run: python -m poetry run pytest --import-mode=importlib --vcr-record=none
+        run: python -m poetry run pytest --import-mode=importlib

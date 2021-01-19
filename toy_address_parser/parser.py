@@ -86,10 +86,10 @@ def _join_children(self, children):
 
 
 class CondenseTree(Transformer):
-    '''A raw parse tree looks like this:
+    '''A raw parse tree looks something like this:
         address
-            german_address
-                street
+            with_street_first
+                named_street
                     street_word
                         W
                         i
@@ -102,10 +102,17 @@ class CondenseTree(Transformer):
                         l
                         e
                         e
-                housenumber 3
+            ...
 
     This condenses that into a dictionary:
-        {'street': 'Musterstraße', 'housenumber': '123'}
+        {'street': 'Winterallee', 'housenumber': '3'}
+
+    Lark uses method names to match to node names. So these need to
+    match the definitions in the grammar up above. The method is called
+    using its children as arguments (ie, a list of instances of
+    lark.Tree or lark.Token). The return value then replaces the node
+    in the (copied) parse tree, with no wrapping -- so if you return
+    a string, you get a string, and not a lark.Token wrapping it.
     '''
     named_street = _make_condensed_node('street')
     numbered_street = _make_condensed_node('street')
@@ -137,7 +144,9 @@ _PARSER = Lark(
 
 
 def parse(address: str):
-    # Let parent handle parse errors
+    # Let caller handle parse errors. We could wrap this in a new error if we
+    # wanted, but for this small of a wrapper, it's... not exactly overkill,
+    # but not something I decided was super important under limited time
     parse_tree = _PARSER.parse(address)
     condensed_tree = CondenseTree().transform(parse_tree)
     return condensed_tree

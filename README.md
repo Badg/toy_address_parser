@@ -7,10 +7,12 @@ A simple multinational address parser. Simple as in "quick and dirty", not as in
 ## Important notes
 
 +   There are some third-party dependency choices here that I would not necessarily make in production. In particular, though trio itself is (in my opinion) an extremely good project, the trio ecosystem is very fledgeling. I might consider it for production use, but only after a heavy technical discussion with whatever team I was working with. Note that there are some interop tools that makes it easy to work with eg asyncio libraries, but for the extremely simple use I had for it here, they weren't needed.
-+   I had to time-box myself on this; I really couldn't put in more than a day and a half over a single weekend
++   Testing for this is woefully insufficient for production, especially for something as finicky as address parsing. There's been a whole lot of ink spilled about "things developers think they know (but are wrong) about addresses". There's absolutely no way this captures the edge cases.
++   Frankly, I'm not even convinced writing a grammar is the right way of doing this. But it was the most expedient way I personally could implement an address parser, and also gave me an excuse to play around with Lark, which I've been meaning to do for a while
++   I had to time-box myself on this; I really couldn't put in more than a day and a half over a single weekend. Total (wall clock) time was less than 10hrs, including a chunk of time spent reading up on international address formats
 +   If I had more time, I'd build a parser using deep learning, trained on the OpenStreetMap dataset. But I've worked with OSM data before and I know it well enought to say there's no way I would have fit that within a single weekend
-+   Side note, I'm not sure where they source their training data, but that's basically the idea behind [deepparse](https://deepparse.org/), and **exactly** the [methodology](https://www.mapzen.com/blog/inside-libpostal/) behind [libpostal](https://github.com/openvenues/libpostal), including its python binding, [pypostal](https://github.com/openvenues/pypostal)
-+   
++   Side note, I'm not sure where they source their training data, but that's basically the idea behind [deepparse](https://deepparse.org/), and **exactly** the [methodology](https://www.mapzen.com/blog/inside-libpostal/) behind [libpostal](https://github.com/openvenues/libpostal), including its python binding, [pypostal](https://github.com/openvenues/pypostal). **If I really needed to do address parsing in prod, I would just use a library to do it!**
++   All of the applications for the parser (the localhost server, the CLI, and the library import) are all manually tested, for time reasons. These are all things you *can* have automated integration tests for, but it's not as simple as the parser, so I cut that for time
 
 ## Installation, usage, tests
 
@@ -86,4 +88,7 @@ Formatted per pep8 but not pep257. Specifics are in ``.flake8``, but the potenti
 
 ## Discussion
 
-+   This was my first time using Typer, which went super well actually. I think its API is a serious step forward compared to other CLI-making frameworks, though I still have some complaints
++   This was my first time using Typer, which went super well actually. I think its API is a serious step forward compared to other CLI-making frameworks, though I still have some minor complaints
++   This isn't the first grammar I've written, but it's the first I've written using Lark. My general feeling is that using a formal grammar for address parsing is going to be a game of whack-a-mole. With some relatively quick brute force work, you'll get 85-90% of addresses to parse, but the remaining 10-15%... I think an ML solution would be more accurrate and probably faster to run. But for me personally, it wouldn't have been faster to code, and again, I'm under a lot of time pressure
++   Dealing with potential parse ambiguity would be much, much easier if the country was given in addition to the plain address. Really, any additional information would be helpful here; there's a lot of ambiguity in address formats and it's hard to disambiguate without more info (or an ML solution)
++   One big lesson I learned: it seems like Lark's added sugar into EBNF (in particular, parenthetical groupings) is really fragile, and the Earley algorithm doesn't get insight into it, or... something. So it seems like you're better off avoiding them except for really simple stuff. At any rate, for a brief while I was getting non-deterministic parse results, which... does not lend itself to confidence!
